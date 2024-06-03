@@ -114,7 +114,7 @@ function Quotes() {
                         }
                         votedQuotes[quoteId] = -1;
                     }
-                    
+
                     // Update the local storage with the new voted quotes
                     localStorage.setItem('votedQuotes', JSON.stringify(votedQuotes));
 
@@ -153,7 +153,7 @@ function Quotes() {
             await fetchSession();
         }
         else {
-            toast.success('got a session!');
+            // toast.success('got a session!');
         }
         axios.post(`http://localhost:5555/quotes/${quoteId}/vote/${vote === 1 ? 'up' : 'down'}`)
             .then(() => {
@@ -171,18 +171,6 @@ function Quotes() {
             });
     };
 
-    const downvote = (quoteId) => {
-        axios.post(`http://localhost:5555/quotes/${quoteId}/downvote`)
-            .then(() => {
-                updateQuotes(quoteId, false);
-                toast.info('Downvoted quote!');
-            })
-            .catch((error) => {
-                toast.error('Error: Couldn\'t downvote quote!');
-                console.log(error);
-                setLoading(false);
-            });
-    };
 
     const renderQuotes = (quotesToRender) => {
         return quotesToRender.map((quote, index) => (
@@ -213,10 +201,11 @@ function Quotes() {
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-start">
-                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 hover:saturate-100 scale-110 -rotate-3 ${votedQuotes[quote._id] === 1 ? 'brightness-75' : ''}`} aria-label="Upvote this quote" onClick={() => vote(quote._id, 1)}>👍</button>
+                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 hover:saturate-100 scale-110 -rotate-3 ${JSON.parse(localStorage.getItem('votedQuotes'))[quote._id]===1 ? 'bg-teal-500' : ''}`} aria-label="Upvote this quote" onClick={() => vote(quote._id, 1)} id={('up-' + quote._id)}>👍</button>
+
                                 {/* 🤩 💩 */}
                                 <div className="font-bold fontSpecial text-center">{quote.upvotes - quote.downvotes}</div>
-                                <button className="btn btn-sm text-xl btn-ghost group saturate-50 hover:saturate-100 saturate-0" aria-label="Downvote this quote" onClick={() => vote(quote._id, -1)}>👎</button>
+                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 hover:saturate-100 saturate-0 ${JSON.parse(localStorage.getItem('votedQuotes'))[quote._id]===-1 ? 'bg-teal-500' : ''}`} aria-label="Downvote this quote" onClick={() => vote(quote._id, -1)} id={('down-' + quote._id)}>👎</button>
                             </div>
                         </div>
                     </div>
