@@ -165,6 +165,8 @@ router.post('/:id/vote/:up_or_down', async (request, response) => {
 
 // Route to get a single quote
 router.get('/quote/:id', async (request, response) => {
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+    await delay(1000);
     try {
         const { id } = request.params;
         const quote = await Quote.findById(id);
@@ -190,6 +192,7 @@ router.get('/session', async (request, response) => {
 
         const newSession = {
             session: token,
+            // expireAfterSeconds: 3600,
         }
         // votes: {
         //     '665beee77a029255afbfa7c8': 1,

@@ -85,12 +85,12 @@ function Quotes() {
     const renderQuotes = (quotesToRender) => {
         return quotesToRender.map((quote, index) => (
             <div>
-                <div key={quote._id} className="relative card card-compact w-full bg-base-100 shadow-lg mb-4">
+                <div key={quote._id} className="relative card card-compact w-full bg-base-100 shadow-lg mb-4 text-white">
                     <div className="card-body flex flex-row justify-start gap-4">
                         <div className="flex-1 flex flex-row justify-start items-start gap-2">
                             <span className="font-semibold text-base opacity-60">{index + 1}.</span>
                             <div className="flex flex-col justify-between h-full flex-1">
-                                <a className="relative text-base mb-1 whitespace-pre-line cursor-pointer overflow-hidden h-full max-h-[192px] text-ellipsis">
+                                <a className="relative text-base mb-1 whitespace-pre-line cursor-pointer overflow-hidden h-full max-h-[192px] text-ellipsis" href={`/quotes/quote/${quote._id}`}>
                                     <h2 className="hover:opacity-60 duration-200">{quote.text}</h2>
                                 </a>
                                 <div className="text-xs opacity-60">
@@ -111,10 +111,10 @@ function Quotes() {
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-start">
-                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === 1 ? 'hover:bg-teal-500' : 'hover:saturate-100'} scale-110 -rotate-3 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === 1 ? 'bg-teal-500' : ''}`} aria-label="Upvote this quote" onClick={() => vote(quote._id, 1, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes)} id={('up-' + quote._id)}>👍</button>
+                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === 1 ? 'hover:bg-teal-500' : 'hover:saturate-100'} scale-110 -rotate-3 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === 1 ? 'bg-teal-500' : ''}`} aria-label="Upvote this quote" onClick={() => vote(quote._id, 1, null, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes)} id={('up-' + quote._id)}>👍</button>
                                 {/* 🤩 💩 */}
                                 <div className="font-bold fontSpecial text-center">{quote.upvotes - quote.downvotes}</div>
-                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === 1 ? 'hover:bg-teal-500' : 'hover:saturate-100'} saturate-0 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === -1 ? 'bg-teal-500' : ''}`} aria-label="Downvote this quote" onClick={() => vote(quote._id, -1, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes)} id={('down-' + quote._id)}>👎</button>
+                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === 1 ? 'hover:bg-teal-500' : 'hover:saturate-100'} saturate-0 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === -1 ? 'bg-teal-500' : ''}`} aria-label="Downvote this quote" onClick={() => vote(quote._id, -1, null, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes)} id={('down-' + quote._id)}>👎</button>
                             </div>
                         </div>
                     </div>

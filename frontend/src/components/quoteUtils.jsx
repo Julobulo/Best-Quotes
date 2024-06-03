@@ -13,7 +13,7 @@ export const fetchSession = async () => {
     }
 };
 
-export const updateQuotes = (quoteId, isUpvote, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes) => {
+export const updateQuotes = (quoteId, isUpvote, setQuote, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes) => {
     const updateVotes = (quotes) => {
         return quotes.map((quote) => {
             if (quote._id === quoteId) {
@@ -61,14 +61,21 @@ export const updateQuotes = (quoteId, isUpvote, votedQuotes, bestQuotes, setBest
         });
     };
 
-    if (localStorage.getItem('activeTab') === "Best") {
+    const activeTab = localStorage.getItem('activeTab');
+    if (activeTab === "Best") {
         setBestQuotes(updateVotes(bestQuotes));
-    } else {
+    } else if (activeTab === "New") {
         setNewestQuotes(updateVotes(newestQuotes));
+    } else if (activeTab === "QuoteDetail") {
+        setQuote((quote) => ({
+            ...quote,
+            ...updateVotes([quote])[0], // Update only the single quote
+        }));
     }
 };
 
-export const vote = async (quoteId, vote, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes) => {
+export const vote = async (quoteId, vote, votedQuotes, setQuote, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes) => {
+
     if (!(Cookies.get('session'))) {
         console.log(`Don't have a session... Getting a session!`);
         await fetchSession();
@@ -83,7 +90,12 @@ export const vote = async (quoteId, vote, votedQuotes, bestQuotes, setBestQuotes
                 [quoteId]: vote === 1 ? 1 : -1,
             };
             console.log(`Debugging: updatedVotedQuotes`);
-            updateQuotes(quoteId, (vote === 1 ? true : false), votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes);
+            if (localStorage.getItem('activeTab') === "QuoteDetail") {
+                updateQuotes(quoteId, (vote === 1 ? true : false), setQuote, votedQuotes, null, null, null, null);
+            }
+            else {
+                updateQuotes(quoteId, (vote === 1 ? true : false), null, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes);
+            }
             console.log(`Debugging: updated Quotes`);
             toast.info(`${vote === 1 ? 'Upvoted' : 'Downvoted'} quote!`);
         })
