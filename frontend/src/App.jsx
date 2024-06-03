@@ -10,8 +10,10 @@ import { getSession } from "./components/getSession.jsx";
 // notifications
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Cookies from "js-cookie";
 
 const App = () => {
+  // console.log(`Session cookie: ${Cookies.set('session', 'abal')}`);
   return (
     <div className="min-h-screen bg-white">
       <div>

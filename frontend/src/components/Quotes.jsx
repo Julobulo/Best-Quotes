@@ -12,17 +12,28 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { CookiesProvider, useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 import { getSession } from "./getSession";
 // import Quote from "./Quote";
 // Set up axios to include cookies in requests
 axios.defaults.withCredentials = true;
 
 function Quotes() {
+    const [votedQuotes, setVotedQuotes] = useState({});
     const [activeTab, setActiveTab] = useState(localStorage.getItem("activeTab") || "Best");;
     const [bestQuotes, setBestQuotes] = useState([]);
     const [newestQuotes, setNewestQuotes] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [cookies, setCookie, removeCookie] = useCookies(['session']);
+    // const [cookies, setCookie, removeCookie] = useCookies(['session']);
+    const [session, setSession] = useState(null);
+    useEffect(() => {
+        // Get the value of the "session" cookie
+        const sessionCookie = Cookies.get('session');
+        console.log(`Retrieved session cookie on load: ${sessionCookie}`);
+        if (sessionCookie) {
+            setSession(sessionCookie);
+        }
+    }, []);
 
     useEffect(() => {
         setLoading(true);
@@ -45,7 +56,7 @@ function Quotes() {
         localStorage.setItem("activeTab", activeTab);
     }, [activeTab]);
 
-    
+
     function renderButton(index, isLast) {
         // Index is passed +1, otherwise the button would appear after the 4th quote, 11th, ...
         if (index === 3 || index === 10 || index === 25 || index === 50 || isLast) {
@@ -69,21 +80,55 @@ function Quotes() {
         }
         return null;
     };
-    
+
     const updateQuotes = (quoteId, isUpvote) => {
         const updateVotes = (quotes) => {
             return quotes.map((quote) => {
                 if (quote._id === quoteId) {
+                    let upvotes = quote.upvotes;
+                    let downvotes = quote.downvotes;
+                    const votedQuotes = JSON.parse(localStorage.getItem('votedQuotes')) || {};
+                    const previousVote = votedQuotes[quoteId] || 0;
+
+                    if (isUpvote) {
+                        if (previousVote === -1) {
+                            // if it's the user's second different consecutive vote, add 1 to upvotes and -1 to downvotes
+                            upvotes += 1;
+                            downvotes -= 1;
+                        }
+                        else {
+                            // else, just add 1 to upvotes
+                            upvotes += 1;
+                        }
+                        votedQuotes[quoteId] = 1;
+                    }
+                    else {
+                        if (previousVote === 1) {
+                            // if the user had previously voted up but now votes down, then -1 upvotes +1 downvotes
+                            upvotes -= 1;
+                            downvotes += 1;
+                        }
+                        else {
+                            // else, +1 downvotes
+                            downvotes += 1;
+                        }
+                        votedQuotes[quoteId] = -1;
+                    }
+                    
+                    // Update the local storage with the new voted quotes
+                    localStorage.setItem('votedQuotes', JSON.stringify(votedQuotes));
+
                     return {
                         ...quote,
-                        upvotes: isUpvote ? quote.upvotes + 1 : quote.upvotes,
-                        downvotes: !isUpvote ? quote.downvotes + 1 : quote.downvotes,
+                        upvotes,
+                        downvotes,
+                        voted: isUpvote ? 1 : -1, // Store the user's current vote
                     };
                 }
                 return quote;
             });
         };
-        
+
         if (activeTab === "Best") {
             setBestQuotes(updateVotes(bestQuotes));
         } else {
@@ -91,39 +136,36 @@ function Quotes() {
         }
     };
 
-    // Gets session from function and stores it inside a cookie
+
+
+    // Gets session from function
     const fetchSession = async () => {
         const newSession = await getSession();
         if (newSession) {
-            setCookie("session", newSession, {sameSite: 'strict'});
-            // console.log(`set cookie: ${cookies.session}, session: ${newSession}`);
+            setSession(newSession);
+            console.log(`set cookie: ${session}, session: ${newSession}`);
         }
     };
-    
+
     const vote = async (quoteId, vote) => {
-        if (!cookies.session) {
+        if (!(Cookies.get('session'))) {
             console.log(`Don't have a session... Getting a session!`);
             await fetchSession();
-            // const updatedCookies = cookies;
-            // if (updatedCookies.session) {
-            //     console.log(`Got a session!`);
-            //     toast.success(`Got a session: ${updatedCookies.session}`);
-            // } else {
-            //     console.log(`Couldn't get a session... cookies.session: ${cookies.session}`);
-            //     return;
-            // }
         }
-        axios.post(`http://localhost:5555/quotes/${quoteId}/${vote===1 ? 'upvote' : 'downvote'}`, {
-            headers: {
-              Cookie: 'sessionid=abcdef123456', // Replace with your cookie value
-            },
-          })
+        else {
+            toast.success('got a session!');
+        }
+        axios.post(`http://localhost:5555/quotes/${quoteId}/vote/${vote === 1 ? 'up' : 'down'}`)
             .then(() => {
-                updateQuotes(quoteId, (vote===1 ? true : false));
-                toast.info(`${vote===1 ? 'Upvoted' : 'Downvoted'} quote!`);
+                const updatedVotedQuotes = {
+                    ...votedQuotes,
+                    [quoteId]: vote === 1 ? 1 : -1,
+                };
+                updateQuotes(quoteId, (vote === 1 ? true : false));
+                toast.info(`${vote === 1 ? 'Upvoted' : 'Downvoted'} quote!`);
             })
             .catch((error) => {
-                toast.error(`Error: Couldn\'t ${vote===1 ? 'upvote' : 'downvote'} quote!`);
+                toast.error(`Error: Couldn\'t ${vote === 1 ? 'upvote' : 'downvote'} quote!`);
                 console.log(error);
                 setLoading(false);
             });
@@ -171,7 +213,7 @@ function Quotes() {
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-start">
-                                <button className="btn btn-sm text-xl btn-ghost group saturate-50 hover:saturate-100 saturate-100 scale-110 -rotate-3 " aria-label="Upvote this quote" onClick={() => vote(quote._id, 1)}>👍</button>
+                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 hover:saturate-100 scale-110 -rotate-3 ${votedQuotes[quote._id] === 1 ? 'brightness-75' : ''}`} aria-label="Upvote this quote" onClick={() => vote(quote._id, 1)}>👍</button>
                                 {/* 🤩 💩 */}
                                 <div className="font-bold fontSpecial text-center">{quote.upvotes - quote.downvotes}</div>
                                 <button className="btn btn-sm text-xl btn-ghost group saturate-50 hover:saturate-100 saturate-0" aria-label="Downvote this quote" onClick={() => vote(quote._id, -1)}>👎</button>
