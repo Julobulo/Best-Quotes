@@ -122,7 +122,7 @@ router.post('/:id/vote/:up_or_down', async (request, response) => {
         if (!quote) {
             return response.status(404).send('Quote not found');
         }
-        const ret = checkVote(cookies.get('session'), id, (up_or_down==='up' ? 1:-1));
+        const ret = checkVote(cookies.get('session'), id, (up_or_down === 'up' ? 1 : -1));
         if ((await ret).allowed) {
             console.log('vote is accepted!');
             console.log(`message: ${(await ret).message}`);
@@ -163,25 +163,22 @@ router.post('/:id/vote/:up_or_down', async (request, response) => {
     }
 });
 
-// Route to downvote quote
-router.post('/:id/downvote', async (request, response) => {
+// Route to get a single quote
+router.get('/:id', async (request, response) => {
     try {
         const { id } = request.params;
         const quote = await Quote.findById(id);
         if (!quote) {
-            return response.status(404).send('Quote not found');
+            return response.status(404).send(`Couldn't find the quote...`);
         }
-        // Increment the upvotes count
-        quote.downvotes += 1;
-        // Save the updated quote
-        await quote.save();
-        return response.status(200).send("Upvoted successfully");
+
+        return response.status(200).json(quote);
     }
     catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.message });
     }
-});
+})
 
 // Route to get a session
 router.get('/session', async (request, response) => {
