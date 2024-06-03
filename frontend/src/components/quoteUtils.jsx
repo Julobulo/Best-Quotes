@@ -110,3 +110,18 @@ export const vote = async (quoteId, vote, votedQuotes, setQuote, bestQuotes, set
             // setLoading(false);
         });
 };
+
+export const share = async (quoteId) => {
+    try {
+        if (!quoteId) {
+            await navigator.clipboard.writeText(window.location.href);
+        }
+        else {
+            await navigator.clipboard.writeText(quoteId);
+        }
+        toast.success('Link copied to clipboard!');
+    } catch (err) {
+        console.error("Failed to copy link to clipboard: ", err);
+        toast.error(`Failed to copy link to clipboard...: ${err}`);
+    }
+};

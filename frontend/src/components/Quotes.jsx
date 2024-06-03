@@ -14,13 +14,14 @@ import { toast } from "react-toastify";
 import { CookiesProvider, useCookies } from "react-cookie";
 import Cookies from "js-cookie";
 import { getSession } from "./getSession";
-import { fetchSession, updateQuotes, vote } from "./quoteUtils";
+import { vote, share } from "./quoteUtils";
+import { CiShare2 } from "react-icons/ci";
 // Set up axios to include cookies in requests
 axios.defaults.withCredentials = true;
 
 function Quotes() {
     const [votedQuotes, setVotedQuotes] = useState({});
-    const [activeTab, setActiveTab] = useState(localStorage.getItem("activeTab") === 'QuoteDetail' ? 'Best' : localStorage.getItem("activeTab") || "Best");
+    const [activeTab, setActiveTab] = useState(localStorage.getItem("activeTab") === 'Best' ? 'Best' : 'New');
     const [bestQuotes, setBestQuotes] = useState([]);
     const [newestQuotes, setNewestQuotes] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -107,7 +108,7 @@ function Quotes() {
                                         ) : (
                                             quote.author
                                         )}
-                                    </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className="link hover:link-accent no-underline " aria-label="Report this quote">report</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote">share</button>
+                                    </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className="link hover:link-accent no-underline " aria-label="Report this quote">report</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote" onClick={() => share(`${window.location.href}quotes/quote/${quote._id}`)}><CiShare2 className='inline' /> share</button>
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-start">

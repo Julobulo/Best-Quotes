@@ -192,8 +192,8 @@ router.get('/session', async (request, response) => {
 
         const newSession = {
             session: token,
-            // expireAfterSeconds: 3600,
         }
+        // expireAfterSeconds: 3600,
         // votes: {
         //     '665beee77a029255afbfa7c8': 1,
         // }

@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import Test from "./components/Test.jsx";
 import Quote from "../../backend/models/Quote.js";
 import CreateQuote from "./components/CreateQuote.jsx";
+import QuoteDetail from "./components/QuoteDetail.jsx";
 import { getSession } from "./components/getSession.jsx";
 // notifications
 import { ToastContainer, toast } from "react-toastify";
@@ -13,7 +14,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import Cookies from "js-cookie";
 
 const App = () => {
-  // console.log(`Session cookie: ${Cookies.set('session', 'abal')}`);
   return (
     <div className="min-h-screen bg-white">
       <div>
@@ -36,7 +36,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={[<Home />, <Quotes />]} />
           <Route path="/quotes" element={<Quotes />} />
-          <Route path="/quotes/create" element={<CreateQuote />} /> {/* Assuming Quotes component handles quote creation */}
+          <Route path="/quotes/create" element={<CreateQuote />} />
+          <Route path="/quotes/quote/:id" element={<QuoteDetail />} /> {/* New route for quote detail */}
         </Routes>
         {/* <Test /> */}
         {/* <Quotes /> */}

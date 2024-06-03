@@ -3,20 +3,23 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 // To get a nice date format
 import { formatDistanceToNow } from "date-fns";
 // Import important functions from 
-import { fetchSession, updateQuotes, vote } from "./quoteUtils";
+import { vote, share } from "./quoteUtils";
 import Spinner from './Spinner';
+import { CiShare2 } from "react-icons/ci";
+
 
 const QuoteDetail = () => {
     const { id } = useParams();
     const [quote, setQuote] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
+    
     localStorage.setItem('activeTab', 'QuoteDetail');
-
+    
+    
     useEffect(() => {
         setLoading(true);
         axios.get(`http://localhost:5555/quotes/quote/${id}`)
@@ -48,7 +51,7 @@ const QuoteDetail = () => {
                             <div className="flex-1 flex flex-row justify-start items-start gap-2">
                                 {/* <span className="font-semibold text-base opacity-60">{index + 1}.</span> */}
                                 <div className="flex flex-col justify-between h-full flex-1">
-                                    <a className="relative text-base mb-1 whitespace-pre-line cursor-pointer overflow-hidden h-full max-h-[192px] text-ellipsis" href={`/quotes/quote/${quote._id}`}>
+                                    <a className="relative text-base mb-1 whitespace-pre-line cursor-pointer overflow-hidden h-full max-h-[192px] text-ellipsis">
                                         <h2 className="hover:opacity-60 duration-200">{quote.text}</h2>
                                     </a>
                                     <div className="text-xs opacity-60">
@@ -65,7 +68,7 @@ const QuoteDetail = () => {
                                             ) : (
                                                 quote.author
                                             )}
-                                        </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className="link hover:link-accent no-underline " aria-label="Report this quote">report</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote">share</button>
+                                        </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className="link hover:link-accent no-underline " aria-label="Report this quote">report</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote" onClick={() => share(null)}><CiShare2 className='inline' /> share</button>
                                     </div>
                                 </div>
                                 <div className="flex flex-col items-center justify-start">
