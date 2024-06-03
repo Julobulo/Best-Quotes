@@ -3,6 +3,7 @@ import Quote from "../models/Quote.js";
 import Session from "../models/Session.js";
 import jwt from "jsonwebtoken";
 import { JWTsecret } from "../config.js";
+import Cookies from "cookies";
 
 const router = express.Router();
 
@@ -31,7 +32,7 @@ router.get('/best', async (request, response) => {
     }
     catch (error) {
         console.log(error.message);
-        response.status(500).send({message: error.message});
+        response.status(500).send({ message: error.message });
     }
 });
 
@@ -46,7 +47,7 @@ router.get('/newest', async (request, response) => {
     }
     catch (error) {
         console.log(error.message);
-        response.status(500).send({message: error.message});
+        response.status(500).send({ message: error.message });
     }
 });
 
@@ -58,10 +59,10 @@ router.post('/create', async (request, response) => {
             // || !request.body.author ||
             // !request.body.twitter
         ) {
-            return response.status(400).send({message: 'Send all required fields: text'})
+            return response.status(400).send({ message: 'Send all required fields: text' })
         }
         if (request.body.text.length < 15 || request.body.text.length > 300) {
-            return response.status(400).send({message: 'The quote is either less than 15 characters or more than 300!'})
+            return response.status(400).send({ message: 'The quote is either less than 15 characters or more than 300!' })
         }
         const newQuote = {
             text: request.body.text,
@@ -74,14 +75,17 @@ router.post('/create', async (request, response) => {
     }
     catch (error) {
         console.log(error.message);
-        response.status(500).send({message: error.message});
+        response.status(500).send({ message: error.message });
     }
 });
 
 // Route to upvote quote
 router.post('/:id/upvote', async (request, response) => {
     try {
-        const {id} = request.params;
+        // Create a cookies object
+        var cookies = new Cookies(request, response);
+        console.log(`Cookies: ${cookies.get('session')}`);
+        const { id } = request.params;
         const quote = await Quote.findById(id);
         if (!quote) {
             return response.status(404).send('Quote not found');
@@ -94,14 +98,14 @@ router.post('/:id/upvote', async (request, response) => {
     }
     catch (error) {
         console.log(error.message);
-        response.status(500).send({message: error.message});
+        response.status(500).send({ message: error.message });
     }
 });
 
 // Route to downvote quote
 router.post('/:id/downvote', async (request, response) => {
     try {
-        const {id} = request.params;
+        const { id } = request.params;
         const quote = await Quote.findById(id);
         if (!quote) {
             return response.status(404).send('Quote not found');
@@ -114,7 +118,7 @@ router.post('/:id/downvote', async (request, response) => {
     }
     catch (error) {
         console.log(error.message);
-        response.status(500).send({message: error.message});
+        response.status(500).send({ message: error.message });
     }
 });
 
@@ -125,7 +129,7 @@ router.get('/session', async (request, response) => {
         const token = jwt.sign(randomSession, JWTsecret, { expiresIn: '24h' }); // Token expires in 24 hour
         // console.log(`Here is the generated sessionID: ${sessionID.sessionID}, time: ${new Date().toISOString()}
         console.log(`Here is the generated token: ${token}`)
-    
+
         const newSession = {
             session: token,
         }
@@ -133,16 +137,16 @@ router.get('/session', async (request, response) => {
         //     '665beee77a029255afbfa7c8': 1,
         // }
         console.log(`Here is the generated newSession: ${newSession.session}`);
-    
+
         const sessionCreated = await Session.create(newSession);
         console.log(`sessionCreated: ${sessionCreated}`);
-    
+
         response.cookie('session', token, { httpOnly: true, secure: false }); // Set the cookie with the token
         response.status(200).json({ token });
     }
     catch (error) {
         console.log(error.message);
-        response.status(500).send({message: error.message});
+        response.status(500).send({ message: error.message });
     }
 });
 
@@ -157,7 +161,7 @@ router.get('/', async (request, response) => {
     }
     catch (error) {
         console.log(error.message);
-        response.status(500).send({message: error.message});
+        response.status(500).send({ message: error.message });
     }
 });
 

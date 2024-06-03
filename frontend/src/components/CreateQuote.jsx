@@ -22,7 +22,7 @@ function CreateQuote() {
             await axios.post("http://localhost:5555/quotes/create", {
                 text: quote,
                 author: author || "Anonymous",
-                twitter: '@' (twitter ||  "Anonymous"),
+                twitter: '@' + (twitter ||  "Anonymous"),
             });
             toast.success("Thanks for sharing your knowledge and wisdom with our community!");
             navigate("/");
