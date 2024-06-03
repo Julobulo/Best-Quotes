@@ -1,5 +1,8 @@
 import express from "express";
 import Quote from "../models/Quote.js";
+import Session from "../models/Session.js";
+import jwt from "jsonwebtoken";
+import { JWTsecret } from "../config.js";
 
 const router = express.Router();
 
@@ -108,6 +111,34 @@ router.post('/:id/downvote', async (request, response) => {
         // Save the updated quote
         await quote.save();
         return response.status(200).send("Upvoted successfully");
+    }
+    catch (error) {
+        console.log(error.message);
+        response.status(500).send({message: error.message});
+    }
+});
+
+// Route to get a session
+router.get('/session', async (request, response) => {
+    try {
+        const randomSession = { session: (new Date().toISOString()) }; // Maybe use a more complex sessionID if needed
+        const token = jwt.sign(randomSession, JWTsecret, { expiresIn: '24h' }); // Token expires in 24 hour
+        // console.log(`Here is the generated sessionID: ${sessionID.sessionID}, time: ${new Date().toISOString()}
+        console.log(`Here is the generated token: ${token}`)
+    
+        const newSession = {
+            session: token,
+        }
+        // votes: {
+        //     '665beee77a029255afbfa7c8': 1,
+        // }
+        console.log(`Here is the generated newSession: ${newSession.session}`);
+    
+        const sessionCreated = await Session.create(newSession);
+        console.log(`sessionCreated: ${sessionCreated}`);
+    
+        response.cookie('session', token, { httpOnly: true, secure: false }); // Set the cookie with the token
+        response.status(200).json({ token });
     }
     catch (error) {
         console.log(error.message);

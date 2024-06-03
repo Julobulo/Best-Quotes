@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import Test from "./components/Test.jsx";
 import Quote from "../../backend/models/Quote.js";
 import CreateQuote from "./components/CreateQuote.jsx";
+import { getSession } from "./components/getSession.jsx";
 // notifications
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,7 +27,7 @@ const App = () => {
           pauseOnHover
           theme="dark"
           transition:Bounce
-/>
+        />
       </div>
       <Navbar />
       <div className="container mx-auto sm:px-0 md:w-2/3 lg:w-1/2">

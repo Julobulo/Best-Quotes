@@ -6,8 +6,8 @@ import { toast } from "react-toastify";
 function CreateQuote() {
     const navigate = useNavigate();
     const [quote, setQuote] = useState("");
-    const [author, setAuthor] = useState("Anonymous");
-    const [twitter, setTwitter] = useState("Anonymous");
+    const [author, setAuthor] = useState("");
+    const [twitter, setTwitter] = useState("");
     const [error, setError] = useState("");
 
     const handleSubmit = async (e) => {
@@ -21,8 +21,8 @@ function CreateQuote() {
         try {
             await axios.post("http://localhost:5555/quotes/create", {
                 text: quote,
-                author: author,
-                twitter: '@'+twitter,
+                author: author || "Anonymous",
+                twitter: '@' (twitter ||  "Anonymous"),
             });
             toast.success("Thanks for sharing your knowledge and wisdom with our community!");
             navigate("/");
@@ -44,6 +44,7 @@ function CreateQuote() {
                         className="border border-gray-300 rounded-md p-2 w-full"
                         rows="5"
                         value={quote}
+                        placeholder="Your inspiring quote here..."
                         onChange={(e) => setQuote(e.target.value)}
                         required
                     />
@@ -55,6 +56,7 @@ function CreateQuote() {
                         id="author"
                         className="border border-gray-300 rounded-md p-2 w-full"
                         value={author}
+                        placeholder="Quote's author"
                         onChange={(e) => setAuthor(e.target.value)}
                     />
                 </div>
@@ -67,6 +69,7 @@ function CreateQuote() {
                             id="twitter"
                             className="pl-8 border border-gray-300 rounded-md p-2 w-full"
                             value={twitter}
+                            placeholder="Author's twitter handle"
                             onChange={(e) => setTwitter(e.target.value)}
                         />
                     </div>
