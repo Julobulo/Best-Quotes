@@ -164,7 +164,7 @@ router.post('/:id/vote/:up_or_down', async (request, response) => {
 });
 
 // Route to get a single quote
-router.get('/:id', async (request, response) => {
+router.get('/quote/:id', async (request, response) => {
     try {
         const { id } = request.params;
         const quote = await Quote.findById(id);

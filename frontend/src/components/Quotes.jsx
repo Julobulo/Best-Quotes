@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { CookiesProvider, useCookies } from "react-cookie";
 import Cookies from "js-cookie";
 import { getSession } from "./getSession";
-// import Quote from "./Quote";
+import { fetchSession, updateQuotes, vote } from "./quoteUtils";
 // Set up axios to include cookies in requests
 axios.defaults.withCredentials = true;
 
@@ -24,8 +24,8 @@ function Quotes() {
     const [bestQuotes, setBestQuotes] = useState([]);
     const [newestQuotes, setNewestQuotes] = useState([]);
     const [loading, setLoading] = useState(false);
-    // const [cookies, setCookie, removeCookie] = useCookies(['session']);
     const [session, setSession] = useState(null);
+
     useEffect(() => {
         // Get the value of the "session" cookie
         const sessionCookie = Cookies.get('session');
@@ -81,101 +81,6 @@ function Quotes() {
         return null;
     };
 
-    const updateQuotes = (quoteId, isUpvote) => {
-        const updateVotes = (quotes) => {
-            return quotes.map((quote) => {
-                if (quote._id === quoteId) {
-                    let upvotes = quote.upvotes;
-                    let downvotes = quote.downvotes;
-                    const votedQuotes = JSON.parse(localStorage.getItem('votedQuotes')) || {};
-                    const previousVote = votedQuotes[quoteId] || 0;
-
-                    if (isUpvote) {
-                        if (previousVote === -1) {
-                            // if it's the user's second different consecutive vote, add 1 to upvotes and -1 to downvotes
-                            upvotes += 1;
-                            downvotes -= 1;
-                        }
-                        else {
-                            // else, just add 1 to upvotes
-                            upvotes += 1;
-                        }
-                        votedQuotes[quoteId] = 1;
-                    }
-                    else {
-                        if (previousVote === 1) {
-                            // if the user had previously voted up but now votes down, then -1 upvotes +1 downvotes
-                            upvotes -= 1;
-                            downvotes += 1;
-                        }
-                        else {
-                            // else, +1 downvotes
-                            downvotes += 1;
-                        }
-                        votedQuotes[quoteId] = -1;
-                    }
-
-                    // Update the local storage with the new voted quotes
-                    localStorage.setItem('votedQuotes', JSON.stringify(votedQuotes));
-
-                    return {
-                        ...quote,
-                        upvotes,
-                        downvotes,
-                        voted: isUpvote ? 1 : -1, // Store the user's current vote
-                    };
-                }
-                return quote;
-            });
-        };
-
-        if (activeTab === "Best") {
-            setBestQuotes(updateVotes(bestQuotes));
-        } else {
-            setNewestQuotes(updateVotes(newestQuotes));
-        }
-    };
-
-
-
-    // Gets session from function
-    const fetchSession = async () => {
-        const newSession = await getSession();
-        if (newSession) {
-            setSession(newSession);
-            console.log(`set cookie: ${session}, session: ${newSession}`);
-        }
-    };
-
-    const vote = async (quoteId, vote) => {
-        if (!(Cookies.get('session'))) {
-            console.log(`Don't have a session... Getting a session!`);
-            await fetchSession();
-        }
-        else {
-            // toast.success('got a session!');
-        }
-        axios.post(`http://localhost:5555/quotes/${quoteId}/vote/${vote === 1 ? 'up' : 'down'}`)
-            .then(() => {
-                const updatedVotedQuotes = {
-                    ...votedQuotes,
-                    [quoteId]: vote === 1 ? 1 : -1,
-                };
-                updateQuotes(quoteId, (vote === 1 ? true : false));
-                toast.info(`${vote === 1 ? 'Upvoted' : 'Downvoted'} quote!`);
-            })
-            .catch((error) => {
-                if ((JSON.parse(localStorage.getItem('votedQuotes'))||{})[quoteId]||0) {
-                    toast.error(`Error: You already voted this quote!`);
-                }
-                else {
-                    toast.error(`Error: Couldn\'t ${vote === 1 ? 'upvote' : 'downvote'} quote!`);
-                }
-                console.log(error);
-                setLoading(false);
-            });
-    };
-
 
     const renderQuotes = (quotesToRender) => {
         return quotesToRender.map((quote, index) => (
@@ -206,10 +111,10 @@ function Quotes() {
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-start">
-                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 hover:saturate-100 scale-110 -rotate-3 ${((JSON.parse(localStorage.getItem('votedQuotes'))||{})[quote._id]||0)===1 ? 'bg-teal-500' : ''}`} aria-label="Upvote this quote" onClick={() => vote(quote._id, 1)} id={('up-' + quote._id)}>👍</button>
+                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 hover:saturate-100 scale-110 -rotate-3 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === 1 ? 'bg-teal-500' : ''}`} aria-label="Upvote this quote" onClick={() => vote(quote._id, 1, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes)} id={('up-' + quote._id)}>👍</button>
                                 {/* 🤩 💩 */}
                                 <div className="font-bold fontSpecial text-center">{quote.upvotes - quote.downvotes}</div>
-                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 hover:saturate-100 saturate-0 ${((JSON.parse(localStorage.getItem('votedQuotes'))||{})[quote._id]||0)===-1 ? 'bg-teal-500' : ''}`} aria-label="Downvote this quote" onClick={() => vote(quote._id, -1)} id={('down-' + quote._id)}>👎</button>
+                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 hover:saturate-100 saturate-0 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === -1 ? 'bg-teal-500' : ''}`} aria-label="Downvote this quote" onClick={() => vote(quote._id, -1, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes)} id={('down-' + quote._id)}>👎</button>
                             </div>
                         </div>
                     </div>
