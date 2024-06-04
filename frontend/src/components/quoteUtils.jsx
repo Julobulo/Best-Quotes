@@ -10,6 +10,8 @@ export const fetchSession = async () => {
     if (newSession) {
         // setSession(newSession);
         Cookies.set('session', newSession);
+        // Delete votedQuotes from local storage as it should be empty when first receiving a session
+        try { localStorage.removeItem('votedQuotes'); } catch (err) { }
     }
 };
 
@@ -89,17 +91,28 @@ export const vote = async (quoteId, vote, votedQuotes, setQuote, bestQuotes, set
                 ...votedQuotes,
                 [quoteId]: vote === 1 ? 1 : -1,
             };
-            console.log(`Debugging: updatedVotedQuotes`);
             if (localStorage.getItem('activeTab') === "QuoteDetail") {
                 updateQuotes(quoteId, (vote === 1 ? true : false), setQuote, votedQuotes, null, null, null, null);
             }
             else {
                 updateQuotes(quoteId, (vote === 1 ? true : false), null, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes);
             }
-            console.log(`Debugging: updated Quotes`);
             toast.info(`${vote === 1 ? 'Upvoted' : 'Downvoted'} quote!`);
         })
         .catch((error) => {
+            console.log(`Couldn't vote, error: ${error.response.data}`);
+            if (error.response.data === "Session not found") {
+                console.log(`Fetching session`);
+                fetchSession();
+                // window.location.reload();
+                if (localStorage.getItem('activeTab') === "QuoteDetail") {
+                    updateQuotes(quoteId, (vote === 1 ? true : false), setQuote, votedQuotes, null, null, null, null);
+                }
+                else {
+                    updateQuotes(quoteId, (vote === 1 ? true : false), null, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes);
+                }
+                return
+            }
             if ((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quoteId] || 0) {
                 toast.error(`Error: You already voted this quote!`);
             }

@@ -16,6 +16,7 @@ import Cookies from "js-cookie";
 import { getSession } from "./getSession";
 import { vote, share } from "./quoteUtils";
 import { CiShare2 } from "react-icons/ci";
+import { MdReport } from "react-icons/md";
 // Set up axios to include cookies in requests
 axios.defaults.withCredentials = true;
 
@@ -108,7 +109,7 @@ function Quotes() {
                                         ) : (
                                             quote.author
                                         )}
-                                    </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className="link hover:link-accent no-underline " aria-label="Report this quote">report</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote" onClick={() => share(`${window.location.href}quotes/quote/${quote._id}`)}><CiShare2 className='inline' /> share</button>
+                                    </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className="link hover:link-accent no-underline bg-teal-500 rounded" aria-label="Report this quote" onClick={() => {alert('reported')}}><MdReport className="inline" /> report</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote" onClick={() => share(`${window.location.href}quotes/quote/${quote._id}`)}><CiShare2 className='inline' /> share</button>
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-start">

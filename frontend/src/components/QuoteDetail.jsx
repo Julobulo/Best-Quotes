@@ -10,6 +10,7 @@ import { formatDistanceToNow } from "date-fns";
 import { vote, share } from "./quoteUtils";
 import Spinner from './Spinner';
 import { CiShare2 } from "react-icons/ci";
+import { MdReport } from "react-icons/md";
 
 
 const QuoteDetail = () => {
@@ -68,7 +69,7 @@ const QuoteDetail = () => {
                                             ) : (
                                                 quote.author
                                             )}
-                                        </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className="link hover:link-accent no-underline " aria-label="Report this quote">report</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote" onClick={() => share(null)}><CiShare2 className='inline' /> share</button>
+                                        </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className="link hover:link-accent no-underline bg-teal-500 rounded" aria-label="Report this quote"><MdReport className="inline" /> report</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote" onClick={() => share(null)}><CiShare2 className='inline' /> share</button>
                                     </div>
                                 </div>
                                 <div className="flex flex-col items-center justify-start">

@@ -10,6 +10,11 @@ const sessionSchema = new mongoose.Schema({
         type: Map,
         of: Number,
         default: {}
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        expires: 2592000 // 30 * 24h (86400)
     }
 });
 

@@ -131,7 +131,7 @@ router.post('/:id/vote/:up_or_down', async (request, response) => {
         else {
             console.log('vote was not accepted...');
             console.log(`error: ${(await ret).message}`);
-            return response.status(400).send("vote was not accepted...");
+            return response.status(400).send(`${(await ret).message}`);
         }
         // Increment the upvotes count
         if (up_or_down === 'up') {
