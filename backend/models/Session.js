@@ -11,11 +11,16 @@ const sessionSchema = new mongoose.Schema({
         of: Number,
         default: {}
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-        expires: 2592000 // 30 * 24h (86400)
-    }
+    reports: {
+        type: Map,
+        of: Number,
+        default: {}
+    },
+    // createdAt: {
+    //     type: Date,
+    //     default: Date.now,
+    //     expires: '30d', // 30 * 24h (86400)
+    // }
 });
 
 const Session = mongoose.model('Session', sessionSchema);

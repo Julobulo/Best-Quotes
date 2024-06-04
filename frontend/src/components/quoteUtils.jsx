@@ -11,7 +11,7 @@ export const fetchSession = async () => {
         // setSession(newSession);
         Cookies.set('session', newSession);
         // Delete votedQuotes from local storage as it should be empty when first receiving a session
-        try { localStorage.removeItem('votedQuotes'); } catch (err) { }
+        try { localStorage.removeItem('votedQuotes'); localStorage.removeItem('reportedQuotes') } catch (err) { }
     }
 };
 
@@ -153,7 +153,13 @@ export const report = async (quoteId, setReportedQuotes) => {
                 toast.info(`Thanks for your feedback!`);
             })
             .catch((error) => {
-                    console.error(`Failed to report quote. Error: ${error}`);
-                    toast.error(`Failed to report quote. Error: ${error}`);
+                    if (error.response.data === "Quote already reported") {
+                        console.error(`Error: Quote already reported...`);
+                        toast.error(`Error: Quote already reported...`);
+                    }
+                    else {
+                        console.error(`Failed to report quote. Error: ${error}`);
+                        toast.error(`Failed to report quote. Error: ${error}`);
+                    }
             })
 }

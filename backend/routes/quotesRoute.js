@@ -108,6 +108,31 @@ async function checkVote(sessionID, quoteID, newVote) {
     }
 }
 
+async function checkReport(sessionID, quoteID) {
+    try {
+        const session = await Session.findOne({ session: sessionID });
+
+        if (!session) {
+            return { allowed: false, message: "Session not found" };
+        }
+
+        const currentReport = session.reports.get(quoteID);
+
+        if (!currentReport) {
+            // User didn't report the quote already
+            session.reports.set(quoteID, 1);
+            await session.save();
+            console.log(`Wrote report to session document`);
+            return { allowed: true, message: "Report accepted" };
+        } else {
+            // User already reported the quote, can't do it anymore
+            return { allowed: false, message: "Quote already reported"};
+        }
+    } catch (error) {
+        return { allowed: false, message: error.message };
+    }
+}
+
 // Route to upvote quote
 router.post('/:id/vote/:up_or_down', async (request, response) => {
     try {
@@ -186,13 +211,28 @@ router.get('/quote/:id', async (request, response) => {
 router.post('/report/:id', async (request, response) => {
     try {
         const { id } = request.params;
+        // Create a cookies object
+        var cookies = new Cookies(request, response);
+        if (!cookies.get('session')) {
+            return response.status(400).send(`You need to include your session cookie in the request!!`);
+        }
+        console.log(`Cookies: ${cookies.get('session')}`);
         const quote = await Quote.findById(id);
         if (!quote) {
-            return response.status(404).send(`Couldn't find the quote...`);
+            return response.status(404).send('Quote not found');
         }
-        quote.reports += 1;
-        quote.save();
-        console.log('Quote reported.');
+
+        const ret = checkReport(cookies.get('session'), id);
+        if ((await ret).allowed === true) {
+            quote.reports += 1;
+            console.log('Quote reported.');
+            quote.save();
+        }
+        else {
+            console.log(`Quote couldn't be reported...`);
+            console.log(`error: ${(await ret).message}`);
+            return response.status(400).send(`${(await ret).message}`);
+        }
         return response.status(200).send('Quote reported.');
     }
     catch (error) {
