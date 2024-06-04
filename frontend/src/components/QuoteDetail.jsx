@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 // To get a nice date format
 import { formatDistanceToNow } from "date-fns";
 // Import important functions from 
-import { vote, share } from "./quoteUtils";
+import { vote, share, report } from "./quoteUtils";
 import Spinner from './Spinner';
 import { CiShare2 } from "react-icons/ci";
 import { MdReport } from "react-icons/md";
@@ -17,6 +17,7 @@ const QuoteDetail = () => {
     const { id } = useParams();
     const [quote, setQuote] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [reportedQuotes, setReportedQuotes] = useState(JSON.parse(localStorage.getItem('reportedQuotes')) || {});
     
     localStorage.setItem('activeTab', 'QuoteDetail');
     
@@ -69,7 +70,7 @@ const QuoteDetail = () => {
                                             ) : (
                                                 quote.author
                                             )}
-                                        </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className="link hover:link-accent no-underline bg-teal-500 rounded" aria-label="Report this quote"><MdReport className="inline" /> report</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote" onClick={() => share(null)}><CiShare2 className='inline' /> share</button>
+                                        </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className={`link hover:link-accent no-underline ${(reportedQuotes[quote._id] === 1) ? 'bg-teal-500' : 'bg-transparent'}`} aria-label="Report this quote" onClick={() => {report(quote._id, setReportedQuotes)}}><MdReport className="inline" /> report{(reportedQuotes[quote._id] === 1) ? 'ed' : ''}</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote" onClick={() => share(null)}><CiShare2 className='inline' /> share</button>
                                     </div>
                                 </div>
                                 <div className="flex flex-col items-center justify-start">

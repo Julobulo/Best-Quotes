@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { CookiesProvider, useCookies } from "react-cookie";
 import Cookies from "js-cookie";
 import { getSession } from "./getSession";
-import { vote, share } from "./quoteUtils";
+import { vote, share, report } from "./quoteUtils";
 import { CiShare2 } from "react-icons/ci";
 import { MdReport } from "react-icons/md";
 // Set up axios to include cookies in requests
@@ -27,6 +27,7 @@ function Quotes() {
     const [newestQuotes, setNewestQuotes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [session, setSession] = useState(null);
+    const [reportedQuotes, setReportedQuotes] = useState(JSON.parse(localStorage.getItem('reportedQuotes')) || {});
 
     useEffect(() => {
         // Get the value of the "session" cookie
@@ -109,7 +110,7 @@ function Quotes() {
                                         ) : (
                                             quote.author
                                         )}
-                                    </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className="link hover:link-accent no-underline bg-teal-500 rounded" aria-label="Report this quote" onClick={() => {alert('reported')}}><MdReport className="inline" /> report</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote" onClick={() => share(`${window.location.href}quotes/quote/${quote._id}`)}><CiShare2 className='inline' /> share</button>
+                                    </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className={`link hover:link-accent no-underline rounded ${(reportedQuotes[quote._id] === 1) ? 'bg-teal-500' : 'bg-transparent'}`} aria-label="Report this quote" onClick={() => {report(quote._id, setReportedQuotes)}}><MdReport className="inline" /> report{(reportedQuotes[quote._id] === 1) ? 'ed' : ''}</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote" onClick={() => share(`${window.location.href}quotes/quote/${quote._id}`)}><CiShare2 className='inline' /> share</button>
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-start">

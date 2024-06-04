@@ -182,6 +182,25 @@ router.get('/quote/:id', async (request, response) => {
     }
 })
 
+// Route to report a quote
+router.post('/report/:id', async (request, response) => {
+    try {
+        const { id } = request.params;
+        const quote = await Quote.findById(id);
+        if (!quote) {
+            return response.status(404).send(`Couldn't find the quote...`);
+        }
+        quote.reports += 1;
+        quote.save();
+        console.log('Quote reported.');
+        return response.status(200).send('Quote reported.');
+    }
+    catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+})
+
 // Route to get a session
 router.get('/session', async (request, response) => {
     try {

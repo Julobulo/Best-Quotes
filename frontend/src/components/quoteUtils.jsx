@@ -138,3 +138,22 @@ export const share = async (quoteId) => {
         toast.error(`Failed to copy link to clipboard...: ${err}`);
     }
 };
+
+export const report = async (quoteId, setReportedQuotes) => {
+        axios
+            .post(`http://localhost:5555/quotes/report/${quoteId}`)
+            .then(() => {
+                const updatedReportedQuotes = {
+                    ...JSON.parse(localStorage.getItem('reportedQuotes')),
+                    [quoteId]: 1,
+                };
+                localStorage.setItem('reportedQuotes', JSON.stringify(updatedReportedQuotes));
+                setReportedQuotes(updatedReportedQuotes);
+                console.info('Reported quote.');
+                toast.info(`Thanks for your feedback!`);
+            })
+            .catch((error) => {
+                    console.error(`Failed to report quote. Error: ${error}`);
+                    toast.error(`Failed to report quote. Error: ${error}`);
+            })
+}

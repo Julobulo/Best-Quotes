@@ -7,6 +7,7 @@ const quoteSchema = new mongoose.Schema({
   time: { type: Date, required: true},
   upvotes: { type: Number, default: 0 },
   downvotes: { type: Number, default: 0 },
+  reports: { type: Number, default: 0 },
 });
 
 const Quote = mongoose.model("Quote", quoteSchema);
