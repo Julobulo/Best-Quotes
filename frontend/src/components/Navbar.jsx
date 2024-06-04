@@ -4,7 +4,7 @@ import { LuPen } from "react-icons/lu";
 
 function Navbar() {
   return (
-    <nav className="bg-white p-4 rounded-xl mx-auto max-w-4xl flex justify-between items-center">
+    <nav className="bg-white p-4 rounded-xl mx-auto max-w-4xl flex justify-between items-center mx-auto sm:px-0 md:w-2/3 lg:w-1/2">
       <div className="navbar bg-base-100 rounded-box shadow-lg mx-auto max-w-xl">
         <div className="navbar-start">
           <Link to="/quotes/create">
@@ -24,7 +24,7 @@ function Navbar() {
           className="indicator-item indicator-start top-3 left-1 -rotate-12 scale-110 group-hover:scale-75 duration-200"><img src='/icon.svg' height={25} width={25}></img></span><span
             className="indicator-item indicator-bottom bottom-3.5 right-1.5 rotate-6 scale-90 group-hover:scale-125 duration-200"><img src='/icon.svg' height={20} width={20}></img></span><span
               className="font-bold tracking-tight fontSpecial">Best quotes</span></a></div>
-        <div className="navbar-end"><a className="btn btn-ghost px-1" href="https://twitter.com/jules_fagard" target="_blank"
+        <div className="navbar-end"><a className="btn btn-ghost px-1" href="https://twitter.com/JulesTheDev" target="_blank"
           rel="noreferrer">
           <div className="flex flex-row justify-center items-center gap-1 text-xs">
             <div className="avatar">
@@ -65,8 +65,8 @@ function Navbar() {
                     maxHeight: '100%',
                   }}
                   sizes="100vw"
-                  srcSet="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn3udg6nrgoWIkOBe5NIMbZI9o5VHFaPbprg&s" /><noscript><img
-                    alt="Jules Fagard" sizes="100vw"
+                  srcSet="/icon.svg" /><noscript><img
+                    alt="Icon" sizes="100vw"
                     srcSet="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmarc.5471857d.png&amp;w=640&amp;q=75 640w, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmarc.5471857d.png&amp;w=750&amp;q=75 750w, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmarc.5471857d.png&amp;w=828&amp;q=75 828w, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmarc.5471857d.png&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmarc.5471857d.png&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmarc.5471857d.png&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmarc.5471857d.png&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmarc.5471857d.png&amp;w=3840&amp;q=75 3840w"
                     src="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmarc.5471857d.png&amp;w=3840&amp;q=75"
                     decoding="async" data-nimg="fill"
