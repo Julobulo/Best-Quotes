@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
+import { LuPen } from "react-icons/lu";
 
 function Navbar() {
   return (
@@ -14,14 +15,14 @@ function Navbar() {
                   d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                   clipRule="evenodd"></path>
               </svg>
-                <div className="text-left leading-4">New<br />hack</div>
+                <div className="text-left leading-4">New<br />Quote</div>
               </div>
             </button>
           </Link>
         </div>
         <div className="navbar-center"><a className="btn btn-ghost normal-case text-xl indicator group" href="/"><span
-          className="indicator-item indicator-start top-3 left-1 -rotate-12 scale-110 group-hover:scale-75 duration-200">👍</span><span
-            className="indicator-item indicator-bottom bottom-3.5 right-1.5 rotate-6 scale-90 group-hover:scale-125 duration-200">👎</span><span
+          className="indicator-item indicator-start top-3 left-1 -rotate-12 scale-110 group-hover:scale-75 duration-200"><img src='/icon.svg' height={25} width={25}></img></span><span
+            className="indicator-item indicator-bottom bottom-3.5 right-1.5 rotate-6 scale-90 group-hover:scale-125 duration-200"><img src='/icon.svg' height={20} width={20}></img></span><span
               className="font-bold tracking-tight fontSpecial">Best quotes</span></a></div>
         <div className="navbar-end"><a className="btn btn-ghost px-1" href="https://twitter.com/jules_fagard" target="_blank"
           rel="noreferrer">

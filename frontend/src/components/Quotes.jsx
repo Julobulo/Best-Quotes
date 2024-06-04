@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { CookiesProvider, useCookies } from "react-cookie";
 import Cookies from "js-cookie";
 import { getSession } from "./getSession";
-import { vote, share, report } from "./quoteUtils";
+import { vote, share, report, createQuoteButton } from "./quoteUtils";
 import { CiShare2 } from "react-icons/ci";
 import { MdReport } from "react-icons/md";
 // Set up axios to include cookies in requests
@@ -60,29 +60,6 @@ function Quotes() {
     }, [activeTab]);
 
 
-    function renderButton(index, isLast) {
-        // Index is passed +1, otherwise the button would appear after the 4th quote, 11th, ...
-        if (index === 3 || index === 10 || index === 25 || index === 50 || isLast) {
-            return (
-                <Link to="/quotes/create" className="text-black">
-                    <div className="card card-compact w-full bg-accent shadow-lg text-accent-content cursor-pointer hover:bg-accent-focus duration-200 my-5">
-                        <div className="card-body flex flex-row justify-start gap-2">
-                            <div className="flex justify-center items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <div className="text-base font-semibold">Add your best quote?</div>
-                                <div className="opacity-80">No account needed!</div>
-                            </div>
-                        </div>
-                    </div>
-                </Link>
-            );
-        }
-        return null;
-    };
 
 
     const renderQuotes = (quotesToRender) => {
@@ -122,7 +99,7 @@ function Quotes() {
                         </div>
                     </div>
                 </div>
-                {renderButton(index + 1, index + 1 === quotesToRender.length)}
+                {createQuoteButton(index + 1, index + 1 === quotesToRender.length)}
             </div>
         ));
     };

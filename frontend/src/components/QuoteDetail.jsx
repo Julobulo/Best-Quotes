@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 // To get a nice date format
 import { formatDistanceToNow } from "date-fns";
 // Import important functions from 
-import { vote, share, report } from "./quoteUtils";
+import { vote, share, report, createQuoteButton } from "./quoteUtils";
 import Spinner from './Spinner';
 import { CiShare2 } from "react-icons/ci";
 import { MdReport } from "react-icons/md";
@@ -82,6 +82,7 @@ const QuoteDetail = () => {
                             </div>
                         </div>
                     </div>
+                    {createQuoteButton(0, true)}
                 </div>)}
         </div>
     );

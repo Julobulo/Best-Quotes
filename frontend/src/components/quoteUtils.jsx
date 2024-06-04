@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
@@ -163,3 +164,27 @@ export const report = async (quoteId, setReportedQuotes) => {
                     }
             })
 }
+
+export const createQuoteButton = (index, isLast) => {
+    // Index is passed +1, otherwise the button would appear after the 4th quote, 11th, ...
+    if (index === 3 || index === 10 || index === 25 || index === 50 || isLast) {
+        return (
+            <Link to="/quotes/create" className="text-black">
+                <div className="card card-compact w-full bg-accent shadow-lg text-accent-content cursor-pointer hover:bg-accent-focus duration-200 my-5">
+                    <div className="card-body flex flex-row justify-start gap-2">
+                        <div className="flex justify-center items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <div className="text-base font-semibold">Add your best quote?</div>
+                            <div className="opacity-80">No account needed!</div>
+                        </div>
+                    </div>
+                </div>
+            </Link>
+        );
+    }
+    return null;
+};
