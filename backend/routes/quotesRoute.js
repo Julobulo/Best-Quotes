@@ -2,7 +2,9 @@ import express from "express";
 import Quote from "../models/Quote.js";
 import Session from "../models/Session.js";
 import jwt from "jsonwebtoken";
-import { JWTsecret } from "../config.js";
+import dotenv from "dotenv";
+dotenv.config();
+const { JWTsecret } = process.env;
 import Cookies from "cookies";
 
 const router = express.Router();
@@ -10,8 +12,8 @@ const router = express.Router();
 // Route to get top 50 most loved quotes
 router.get('/best', async (request, response) => {
     try {
-        const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
-        await delay(1000);
+        // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+        // await delay(1000);
         const bestQuotes = await Quote.aggregate([
             {
                 $addFields: {
@@ -190,8 +192,8 @@ router.post('/:id/vote/:up_or_down', async (request, response) => {
 
 // Route to get a single quote
 router.get('/quote/:id', async (request, response) => {
-    const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
-    await delay(1000);
+    // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+    // await delay(1000);
     try {
         const { id } = request.params;
         const quote = await Quote.findById(id);
