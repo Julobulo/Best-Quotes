@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import dotenv from "dotenv";
-dotenv.config();
-const { domainName } = process.env;
+const domainName = import.meta.env.VITE_API_BASE_URL;
 
 function CreateQuote() {
     const navigate = useNavigate();

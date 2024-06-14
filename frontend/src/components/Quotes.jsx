@@ -17,9 +17,7 @@ import { getSession } from "./getSession";
 import { vote, share, report, createQuoteButton } from "./quoteUtils";
 import { CiShare2 } from "react-icons/ci";
 import { MdReport } from "react-icons/md";
-import dotenv from "dotenv";
-dotenv.config();
-const { domainName } = process.env;
+const domainName = import.meta.env.VITE_API_BASE_URL;
 // Set up axios to include cookies in requests
 axios.defaults.withCredentials = true;
 

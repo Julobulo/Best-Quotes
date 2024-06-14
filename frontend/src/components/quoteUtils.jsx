@@ -4,9 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { getSession } from "./getSession";
-import dotenv from "dotenv";
-dotenv.config();
-const { domainName } = process.env;
+const domainName = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.withCredentials = true;
 // Gets session from function
 export const fetchSession = async () => {
