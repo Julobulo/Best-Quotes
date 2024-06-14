@@ -17,6 +17,9 @@ import { getSession } from "./getSession";
 import { vote, share, report, createQuoteButton } from "./quoteUtils";
 import { CiShare2 } from "react-icons/ci";
 import { MdReport } from "react-icons/md";
+import dotenv from "dotenv";
+dotenv.config();
+const { domainName } = process.env;
 // Set up axios to include cookies in requests
 axios.defaults.withCredentials = true;
 
@@ -41,8 +44,8 @@ function Quotes() {
     useEffect(() => {
         setLoading(true);
         axios.all([
-            axios.get("http://localhost:5555/quotes/best"),
-            axios.get("http://localhost:5555/quotes/newest")
+            axios.get(`${domainName}/quotes/best`),
+            axios.get(`${domainName}/quotes/newest`)
         ])
             .then(axios.spread((bestResponse, newResponse) => {
                 setBestQuotes(bestResponse.data.data);

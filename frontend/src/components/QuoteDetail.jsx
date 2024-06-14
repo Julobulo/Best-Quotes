@@ -11,6 +11,9 @@ import { vote, share, report, createQuoteButton } from "./quoteUtils";
 import Spinner from './Spinner';
 import { CiShare2 } from "react-icons/ci";
 import { MdReport } from "react-icons/md";
+import dotenv from "dotenv";
+dotenv.config();
+const { domainName } = process.env;
 
 
 const QuoteDetail = () => {
@@ -24,7 +27,7 @@ const QuoteDetail = () => {
     
     useEffect(() => {
         setLoading(true);
-        axios.get(`http://localhost:5555/quotes/quote/${id}`)
+        axios.get(`${domainName}/quotes/quote/${id}`)
             .then((response) => {
                 setQuote(response.data);
                 setLoading(false);

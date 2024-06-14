@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import dotenv from "dotenv";
+dotenv.config();
+const { domainName } = process.env;
 
 function CreateQuote() {
     const navigate = useNavigate();
@@ -19,7 +22,7 @@ function CreateQuote() {
         setError("");
 
         try {
-            await axios.post("http://localhost:5555/quotes/create", {
+            await axios.post(`${domainName}/quotes/create`, {
                 text: quote,
                 author: author || "Anonymous",
                 twitter: '@' + (twitter ||  "Anonymous"),

@@ -4,6 +4,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { getSession } from "./getSession";
+import dotenv from "dotenv";
+dotenv.config();
+const { domainName } = process.env;
 axios.defaults.withCredentials = true;
 // Gets session from function
 export const fetchSession = async () => {
@@ -86,7 +89,7 @@ export const vote = async (quoteId, vote, votedQuotes, setQuote, bestQuotes, set
     else {
         // toast.success('got a session!');
     }
-    axios.post(`http://localhost:5555/quotes/${quoteId}/vote/${vote === 1 ? 'up' : 'down'}`)
+    axios.post(`${domainName}/quotes/${quoteId}/vote/${vote === 1 ? 'up' : 'down'}`)
         .then(() => {
             const updatedVotedQuotes = {
                 ...votedQuotes,
@@ -142,7 +145,7 @@ export const share = async (quoteId) => {
 
 export const report = async (quoteId, setReportedQuotes) => {
         axios
-            .post(`http://localhost:5555/quotes/report/${quoteId}`)
+            .post(`${domainName}/quotes/report/${quoteId}`)
             .then(() => {
                 const updatedReportedQuotes = {
                     ...JSON.parse(localStorage.getItem('reportedQuotes')),
