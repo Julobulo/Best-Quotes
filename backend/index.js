@@ -13,7 +13,7 @@ const app = express();
 // app.use(cors());
 // Option 2:
 app.use(cors({
-    origin: ['https://best-quotes.vercel.app', 'http://bestquotes.jules.tf/', 'https://bestquotes.jules.tf/'],
+    origin: ['https://best-quotes.vercel.app', 'http://bestquotes.jules.tf', 'https://bestquotes.jules.tf'],
     methods: ['GET', 'POST'],
     credentials: true,
     allowedHeaders: ['Content-type'],
