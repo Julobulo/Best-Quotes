@@ -10,7 +10,6 @@ import {
 import Spinner from "../components/Spinner";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import { CookiesProvider, useCookies } from "react-cookie";
 import Cookies from "js-cookie";
 import { getSession } from "./getSession";

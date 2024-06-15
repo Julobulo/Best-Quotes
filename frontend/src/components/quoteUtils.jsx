@@ -99,7 +99,7 @@ export const vote = async (quoteId, vote, votedQuotes, setQuote, bestQuotes, set
             else {
                 updateQuotes(quoteId, (vote === 1 ? true : false), null, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes);
             }
-            toast.info(`${vote === 1 ? 'Upvoted' : 'Downvoted'} quote!`);
+            // toast.info(`${vote === 1 ? 'Upvoted' : 'Downvoted'} quote!`);
         })
         .catch((error) => {
             console.log(`Couldn't vote, error: ${error.response.data}`);

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 // To get a nice date format
 import { formatDistanceToNow } from "date-fns";
 // Import important functions from 
