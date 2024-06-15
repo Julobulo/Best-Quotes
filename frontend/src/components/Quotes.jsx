@@ -32,7 +32,7 @@ function Quotes() {
     useEffect(() => {
         // Get the value of the "session" cookie
         const sessionCookie = Cookies.get('session');
-        console.log(`Retrieved session cookie on load: ${sessionCookie}`);
+        // console.log(`Retrieved session cookie on load: ${sessionCookie}`);
         if (sessionCookie) {
             setSession(sessionCookie);
         }
