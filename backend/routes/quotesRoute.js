@@ -128,7 +128,7 @@ async function checkReport(sessionID, quoteID) {
             return { allowed: true, message: "Report accepted" };
         } else {
             // User already reported the quote, can't do it anymore
-            return { allowed: false, message: "Quote already reported"};
+            return { allowed: false, message: "Quote already reported" };
         }
     } catch (error) {
         return { allowed: false, message: error.message };
@@ -263,7 +263,12 @@ router.get('/session', async (request, response) => {
         const sessionCreated = await Session.create(newSession);
         console.log(`sessionCreated: ${sessionCreated}`);
 
-        response.cookie('session', token, { httpOnly: false, secure: false }); // Set the cookie with the token
+        response.cookie('session', token, {
+            httpOnly: false,
+            secure: true, // Ensure this is true if using HTTPS
+            sameSite: 'None',
+            domain: '.jules.tf'
+        }); // Set the cookie with the token
         response.status(200).json({ token });
     }
     catch (error) {
