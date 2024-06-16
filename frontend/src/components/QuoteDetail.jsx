@@ -41,17 +41,16 @@ const QuoteDetail = () => {
             {loading ? (<Spinner />) : (
                 <div>
                     <Link to='/' className='m-5'>
-                        <button type="button" class="w-full flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700">
+                        <button type="button" class="w-full flex items-center justify-center w-1/2 px-5 py-2 text-sm transition-colors duration-200 border rounded-lg gap-x-2 sm:w-auto hover:bg-gray-800 bg-gray-900 text-gray-200 border-gray-700">
                             <svg class="w-5 h-5 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
                             </svg>
                             <span>Back</span>
                         </button>
                     </Link>
-                    <div key={quote._id} className="relative card card-compact w-full bg-base-100 shadow-lg mb-4 text-white">
+                    <div key={quote._id} className="relative card card-compact w-full bg-[#1D232A] shadow-lg mb-4 text-white">
                         <div className="card-body flex flex-row justify-start gap-4">
                             <div className="flex-1 flex flex-row justify-start items-start gap-2">
-                                {/* <span className="font-semibold text-base opacity-60">{index + 1}.</span> */}
                                 <div className="flex flex-col justify-between h-full flex-1">
                                     <a className="relative text-base mb-1 whitespace-pre-line cursor-pointer overflow-hidden h-full max-h-[192px] text-ellipsis">
                                         <h2 className="hover:opacity-60 duration-200">{quote.text}</h2>

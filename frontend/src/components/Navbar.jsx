@@ -5,7 +5,7 @@ import { LuPen } from "react-icons/lu";
 function Navbar() {
   return (
     <nav className="bg-white p-4 rounded-xl mx-auto max-w-4xl flex justify-between items-center mx-auto sm:px-0 md:w-2/3 lg:w-1/2">
-      <div className="navbar bg-base-100 rounded-box shadow-lg mx-auto max-w-xl">
+      <div className="navbar bg-[#1D232A] rounded-box shadow-lg mx-auto max-w-xl">
         <div className="navbar-start">
           <Link to="/quotes/create">
             <button className="btn btn-accent px-1.5" aria-label="Add a hack">
@@ -23,7 +23,7 @@ function Navbar() {
         <div className="navbar-center"><a className="btn btn-ghost normal-case text-xl indicator group" href="/"><span
           className="indicator-item indicator-start top-3 left-1 -rotate-12 scale-110 group-hover:scale-75 duration-200"><img src='/icon.svg' height={25} width={25}></img></span><span
             className="indicator-item indicator-bottom bottom-3.5 right-1.5 rotate-6 scale-90 group-hover:scale-125 duration-200"><img src='/icon.svg' height={20} width={20}></img></span><span
-              className="font-bold tracking-tight fontSpecial">Best quotes</span></a></div>
+              className="font-bold tracking-tight fontSpecial text-[#a6adbb]">Best quotes</span></a></div>
         <div className="navbar-end"><a className="btn btn-ghost px-1" href="https://twitter.com/JulesTheDev" target="_blank"
           rel="noreferrer">
           <div className="flex flex-row justify-center items-center gap-1 text-xs">
@@ -90,7 +90,7 @@ function Navbar() {
                     }}
                     loading="me!" /></noscript></span></div>
             </div>
-            <div className="text-left leading-3">By <br /><span className="underline text-accent">Jules</span></div>
+            <div className="text-left leading-3 text-[#a6adbb]">By <br /><span className="underline text-accent">Jules</span></div>
           </div>
         </a></div>
       </div>

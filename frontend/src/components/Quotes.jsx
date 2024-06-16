@@ -65,7 +65,7 @@ function Quotes() {
     const renderQuotes = (quotesToRender) => {
         return quotesToRender.map((quote, index) => (
             <div>
-                <div key={quote._id} className="relative card card-compact w-full bg-base-100 shadow-lg mb-4 text-white">
+                <div key={quote._id} className="relative card card-compact w-full bg-[#1D232A] shadow-lg mb-4 text-white">
                     <div className="card-body flex flex-row justify-start gap-4">
                         <div className="flex-1 flex flex-row justify-start items-start gap-2">
                             <span className="font-semibold text-base opacity-60">{index + 1}.</span>
@@ -120,7 +120,7 @@ function Quotes() {
                             key="Best"
                             value="Best"
                             onClick={() => setActiveTab("Best")}
-                            className={activeTab === "Best" ? "text-gray-900" : ""}
+                            className={activeTab === "Best" ? "text-gray-900" : "text-[#a6adbb]"}
                         >
                             {"Best"}
                         </Tab>
@@ -128,7 +128,7 @@ function Quotes() {
                             key="New"
                             value="New"
                             onClick={() => setActiveTab("New")}
-                            className={activeTab === "New" ? "text-gray-900" : ""}
+                            className={activeTab === "New" ? "text-gray-900" : "text-[#a6adbb]"}
                         >
                             {"New"}
                         </Tab>
