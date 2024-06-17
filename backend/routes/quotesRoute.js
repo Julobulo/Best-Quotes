@@ -9,7 +9,7 @@ import Cookies from "cookies";
 
 const router = express.Router();
 
-// Route to get top 50 most loved quotes
+// Route to get top 25 most loved quotes
 router.get('/best', async (request, response) => {
     try {
         // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
@@ -24,9 +24,9 @@ router.get('/best', async (request, response) => {
                 $sort: { netVotes: -1 }
             },
             {
-                $limit: 50
+                $limit: 25
             }
-        ]).limit(50);
+        ]).limit(25);
         return response.status(200).json({
             count: bestQuotes.length,
             data: bestQuotes
@@ -38,13 +38,28 @@ router.get('/best', async (request, response) => {
     }
 });
 
-// Route to get top 50 newest quotes
+// Route to get top 25 newest quotes
 router.get('/newest', async (request, response) => {
     try {
-        const newestQuotes = await Quote.find({}).sort({ time: -1 }).limit(50);
+        const newestQuotes = await Quote.find({}).sort({ time: -1 }).limit(25);
         return response.status(200).json({
             count: newestQuotes.length,
             data: newestQuotes
+        });
+    }
+    catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+});
+
+// Route to get 25 random quotes
+router.get('/random', async (request, response) => {
+    try {
+        const randomQuotes = await Quote.aggregate([{ $sample: { size: 25 } }]);
+        return response.status(200).json({
+            count: randomQuotes.length,
+            data: randomQuotes
         });
     }
     catch (error) {
