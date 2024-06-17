@@ -9,20 +9,24 @@ import {
 } from "@material-tailwind/react";
 import Spinner from "../components/Spinner";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import { CookiesProvider, useCookies } from "react-cookie";
 import Cookies from "js-cookie";
-import { getSession } from "./getSession";
 import { vote, share, report, createQuoteButton } from "./quoteUtils";
 import { CiShare2 } from "react-icons/ci";
 import { MdReport } from "react-icons/md";
+import { LiaRandomSolid } from "react-icons/lia";
+import { FiHeart } from "react-icons/fi";
+import { IoIosTrendingUp } from "react-icons/io";
 const domainName = import.meta.env.VITE_API_BASE_URL;
 // Set up axios to include cookies in requests
 axios.defaults.withCredentials = true;
 
 function Quotes() {
     const [votedQuotes, setVotedQuotes] = useState({});
-    const [activeTab, setActiveTab] = useState(localStorage.getItem("activeTab") === 'Best' ? 'Best' : 'New');
+    if (!(localStorage.getItem("activeTab") === 'Random' || localStorage.getItem("activeTab") === 'Best' || localStorage.getItem("activeTab") === 'New')) {
+        localStorage.setItem('activeTab', 'Random');
+    }
+    const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab'));
+    const [randomQuotes, setRandomQuotes] = useState([]);
     const [bestQuotes, setBestQuotes] = useState([]);
     const [newestQuotes, setNewestQuotes] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -41,10 +45,12 @@ function Quotes() {
     useEffect(() => {
         setLoading(true);
         axios.all([
+            axios.get(`${domainName}/quotes/random`),
             axios.get(`${domainName}/quotes/best`),
-            axios.get(`${domainName}/quotes/newest`)
+            axios.get(`${domainName}/quotes/newest`),
         ])
-            .then(axios.spread((bestResponse, newResponse) => {
+            .then(axios.spread((randomResponse, bestResponse, newResponse) => {
+                setRandomQuotes(randomResponse.data.data);
                 setBestQuotes(bestResponse.data.data);
                 setNewestQuotes(newResponse.data.data);
                 setLoading(false);
@@ -87,14 +93,14 @@ function Quotes() {
                                         ) : (
                                             quote.author
                                         )}
-                                    </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className={`link hover:link-accent no-underline rounded ${(reportedQuotes[quote._id] === 1) ? 'bg-teal-500' : 'bg-transparent'}`} aria-label="Report this quote" onClick={() => {report(quote._id, setReportedQuotes)}}><MdReport className="inline" /> report{(reportedQuotes[quote._id] === 1) ? 'ed' : ''}</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote" onClick={() => share(`${window.location.href}quotes/quote/${quote._id}`)}><CiShare2 className='inline' /> share</button>
+                                    </span>) <span> | {formatDistanceToNow(new Date(quote.time), { addSuffix: true, })}</span> | <button className={`link hover:link-accent no-underline rounded ${(reportedQuotes[quote._id] === 1) ? 'bg-teal-500' : 'bg-transparent'}`} aria-label="Report this quote" onClick={() => { report(quote._id, setReportedQuotes) }}><MdReport className="inline" /> report{(reportedQuotes[quote._id] === 1) ? 'ed' : ''}</button> | <button className="link hover:link-accent no-underline" aria-label="Share this quote" onClick={() => share(`${window.location.href}quotes/quote/${quote._id}`)}><CiShare2 className='inline' /> share</button>
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-start">
-                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === 1 ? 'hover:bg-teal-500' : 'hover:saturate-100'} scale-110 -rotate-3 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === 1 ? 'bg-teal-500' : ''}`} aria-label="Upvote this quote" onClick={() => vote(quote._id, 1, null, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes)} id={('up-' + quote._id)}>👍</button>
+                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === 1 ? 'hover:bg-teal-500' : 'hover:saturate-100'} scale-110 -rotate-3 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === 1 ? 'bg-teal-500' : ''}`} aria-label="Upvote this quote" onClick={() => vote(quote._id, 1, null, votedQuotes, randomQuotes, setRandomQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes)} id={('up-' + quote._id)}>👍</button>
                                 {/* 🤩 💩 */}
                                 <div className="font-bold fontSpecial text-center">{quote.upvotes - quote.downvotes}</div>
-                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === 1 ? 'hover:bg-teal-500' : 'hover:saturate-100'} saturate-0 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === -1 ? 'bg-teal-500' : ''}`} aria-label="Downvote this quote" onClick={() => vote(quote._id, -1, null, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes)} id={('down-' + quote._id)}>👎</button>
+                                <button className={`btn btn-sm text-xl btn-ghost group saturate-50 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === 1 ? 'hover:bg-teal-500' : 'hover:saturate-100'} saturate-0 ${((JSON.parse(localStorage.getItem('votedQuotes')) || {})[quote._id] || 0) === -1 ? 'bg-teal-500' : ''}`} aria-label="Downvote this quote" onClick={() => vote(quote._id, -1, null, votedQuotes, randomQuotes, setRandomQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes)} id={('down-' + quote._id)}>👎</button>
                             </div>
                         </div>
                     </div>
@@ -117,12 +123,26 @@ function Quotes() {
                         }}
                     >
                         <Tab
+                            key="Random"
+                            value="Random"
+                            onClick={() => setActiveTab("Random")}
+                            className={activeTab === "Random" ? "text-gray-900" : "text-[#a6adbb]"}
+                        >
+                            <div className="flex items-center">
+                                <LiaRandomSolid className="mr-2" />
+                                {"Random"}
+                            </div>
+                        </Tab>
+                        <Tab
                             key="Best"
                             value="Best"
                             onClick={() => setActiveTab("Best")}
                             className={activeTab === "Best" ? "text-gray-900" : "text-[#a6adbb]"}
                         >
-                            {"Best"}
+                            <div className="flex items-center">
+                                <FiHeart className="mr-2" />
+                                {"Best"}
+                            </div>
                         </Tab>
                         <Tab
                             key="New"
@@ -130,7 +150,10 @@ function Quotes() {
                             onClick={() => setActiveTab("New")}
                             className={activeTab === "New" ? "text-gray-900" : "text-[#a6adbb]"}
                         >
-                            {"New"}
+                            <div className="flex items-center">
+                                <IoIosTrendingUp className="mr-2" />
+                                {"New"}
+                            </div>
                         </Tab>
                     </TabsHeader>
 
@@ -140,6 +163,9 @@ function Quotes() {
                             mount: { y: 0 },
                             unmount: { y: 250 },
                         }}>
+                        <TabPanel key="Random" value="Random">
+                            {renderQuotes(randomQuotes)}
+                        </TabPanel>
                         <TabPanel key="Best" value="Best">
                             {renderQuotes(bestQuotes)}
                         </TabPanel>

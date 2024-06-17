@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
@@ -17,7 +17,7 @@ export const fetchSession = async () => {
     }
 };
 
-export const updateQuotes = (quoteId, isUpvote, setQuote, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes) => {
+export const updateQuotes = (quoteId, isUpvote, setQuote, votedQuotes, randomQuotes, setRandomQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes) => {
     const updateVotes = (quotes) => {
         return quotes.map((quote) => {
             if (quote._id === quoteId) {
@@ -66,7 +66,9 @@ export const updateQuotes = (quoteId, isUpvote, setQuote, votedQuotes, bestQuote
     };
 
     const activeTab = localStorage.getItem('activeTab');
-    if (activeTab === "Best") {
+    if (activeTab === "Random") {
+        setRandomQuotes(updateVotes(randomQuotes));
+    } else if (activeTab === "Best") {
         setBestQuotes(updateVotes(bestQuotes));
     } else if (activeTab === "New") {
         setNewestQuotes(updateVotes(newestQuotes));
@@ -78,7 +80,7 @@ export const updateQuotes = (quoteId, isUpvote, setQuote, votedQuotes, bestQuote
     }
 };
 
-export const vote = async (quoteId, vote, votedQuotes, setQuote, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes) => {
+export const vote = async (quoteId, vote, votedQuotes, setQuote, randomQuotes, setRandomQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes) => {
 
     if (!(Cookies.get('session'))) {
         console.log(`Don't have a session... Getting a session!`);
@@ -94,10 +96,10 @@ export const vote = async (quoteId, vote, votedQuotes, setQuote, bestQuotes, set
                 [quoteId]: vote === 1 ? 1 : -1,
             };
             if (localStorage.getItem('activeTab') === "QuoteDetail") {
-                updateQuotes(quoteId, (vote === 1 ? true : false), setQuote, votedQuotes, null, null, null, null);
+                updateQuotes(quoteId, (vote === 1 ? true : false), setQuote, votedQuotes, null, null, null, null, null, null);
             }
             else {
-                updateQuotes(quoteId, (vote === 1 ? true : false), null, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes);
+                updateQuotes(quoteId, (vote === 1 ? true : false), null, votedQuotes, randomQuotes, setRandomQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes);
             }
             // toast.info(`${vote === 1 ? 'Upvoted' : 'Downvoted'} quote!`);
         })
@@ -108,10 +110,10 @@ export const vote = async (quoteId, vote, votedQuotes, setQuote, bestQuotes, set
                 fetchSession();
                 // window.location.reload();
                 if (localStorage.getItem('activeTab') === "QuoteDetail") {
-                    updateQuotes(quoteId, (vote === 1 ? true : false), setQuote, votedQuotes, null, null, null, null);
+                    updateQuotes(quoteId, (vote === 1 ? true : false), setQuote, votedQuotes, null, null, null, null, null, null);
                 }
                 else {
-                    updateQuotes(quoteId, (vote === 1 ? true : false), null, votedQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes);
+                    updateQuotes(quoteId, (vote === 1 ? true : false), null, votedQuotes, randomQuotes, setRandomQuotes, bestQuotes, setBestQuotes, newestQuotes, setNewestQuotes);
                 }
                 return
             }
@@ -142,49 +144,63 @@ export const share = async (quoteId) => {
 };
 
 export const report = async (quoteId, setReportedQuotes) => {
-        axios
-            .post(`${domainName}/quotes/report/${quoteId}`)
-            .then(() => {
-                const updatedReportedQuotes = {
-                    ...JSON.parse(localStorage.getItem('reportedQuotes')),
-                    [quoteId]: 1,
-                };
-                localStorage.setItem('reportedQuotes', JSON.stringify(updatedReportedQuotes));
-                setReportedQuotes(updatedReportedQuotes);
-                console.info('Reported quote.');
-                toast.info(`Thanks for your feedback!`);
-            })
-            .catch((error) => {
-                    if (error.response.data === "Quote already reported") {
-                        console.error(`Error: Quote already reported...`);
-                        toast.error(`Error: Quote already reported...`);
-                    }
-                    else {
-                        console.error(`Failed to report quote. Error: ${error}`);
-                        toast.error(`Failed to report quote. Error: ${error}`);
-                    }
-            })
+    axios
+        .post(`${domainName}/quotes/report/${quoteId}`)
+        .then(() => {
+            const updatedReportedQuotes = {
+                ...JSON.parse(localStorage.getItem('reportedQuotes')),
+                [quoteId]: 1,
+            };
+            localStorage.setItem('reportedQuotes', JSON.stringify(updatedReportedQuotes));
+            setReportedQuotes(updatedReportedQuotes);
+            console.info('Reported quote.');
+            toast.info(`Thanks for your feedback!`);
+        })
+        .catch((error) => {
+            if (error.response.data === "Quote already reported") {
+                console.error(`Error: Quote already reported...`);
+                toast.error(`Error: Quote already reported...`);
+            }
+            else {
+                console.error(`Failed to report quote. Error: ${error}`);
+                toast.error(`Failed to report quote. Error: ${error}`);
+            }
+        })
 }
 
 export const createQuoteButton = (index, isLast) => {
+    // const location = useLocation();
+
+    // useEffect(() => {
+    //     window.adsbygoogle = window.adsbygoogle || []
+    //     window.adsbygoogle.push({})
+    // }, [location.pathname]);
     // Index is passed +1, otherwise the button would appear after the 4th quote, 11th, ...
     if (index === 3 || index === 10 || index === 25 || index === 50 || isLast) {
         return (
-            <Link to="/quotes/create" className="text-black">
-                <div className="card card-compact w-full bg-accent shadow-lg text-accent-content cursor-pointer hover:bg-accent-focus duration-200 my-5">
-                    <div className="card-body flex flex-row justify-start gap-2">
-                        <div className="flex justify-center items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <div className="text-base font-semibold">Add your best quote?</div>
-                            <div className="opacity-80">No account needed!</div>
+            <>
+                {/* <ins className="adsbygoogle"
+                    style={{ display: "block" }}
+                    data-ad-client="ca-pub-3258242730784775"
+                    data-ad-slot="2516504936"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"></ins> */}
+                <Link to="/quotes/create" className="text-black">
+                    <div className="card card-compact w-full bg-accent shadow-lg text-accent-content cursor-pointer hover:bg-accent-focus duration-200 my-5">
+                        <div className="card-body flex flex-row justify-start gap-2">
+                            <div className="flex justify-center items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div className="text-base font-semibold">Add your best quote?</div>
+                                <div className="opacity-80">No account needed!</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </Link>
+                </Link>
+            </>
         );
     }
     return null;
