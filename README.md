@@ -29,23 +29,5 @@ This website was made with the following technologies:
 
 ## Conclusion
 
-Best Quotes is your go-to destination for finding and sharing the most inspiring quotes. With its powerful search functionality, random quote generator, user favorites, and quote submission feature, this website offers a comprehensive experience for quote enthusiasts. Start exploring and get ready to be inspired!
-
-
-With our powerful search functionality, you can easily find quotes based on keywords, authors, or categories. The backend of the website utilizes a robust search algorithm that indexes the quotes database, allowing for quick and accurate results.
-
-### Random Quote Generator
-
-Feeling lucky? Click on the "Random Quote" button to get a surprise quote that will uplift your spirits or make you ponder. The backend generates a random number and retrieves a quote from the database based on that number, ensuring a truly random and delightful experience.
-
-### User Favorites
-
-Create an account and start saving your favorite quotes for future reference. The backend stores user preferences in a secure database, allowing you to access your favorite quotes from any device. You can also easily manage your favorites, adding or removing quotes as you please.
-
-### Quote Submission
-
-Have a favorite quote that you'd like to share with the world? Use our quote submission feature to contribute to the Best Quotes collection. The backend handles the submission process, ensuring that all quotes go through a moderation process before being added to the database.
-
-## Conclusion
-
-Best Quotes is your go-to destination for finding and sharing the most inspiring quotes. With its powerful search functionality, random quote generator, user favorites, and quote submission feature, this website offers a comprehensive experience for quote enthusiasts. Start exploring and get ready to be inspired!
+Best Quotes was a really fun project to make, and it is actually useful to discover inspiring quotes that make your day!
+Don't hesitate to take a look at the code and fork the project! (be sure to give me proper credit...)
