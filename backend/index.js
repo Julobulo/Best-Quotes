@@ -45,6 +45,10 @@ app.get('/', (request, response) => {
 // });
 
 app.use('/quotes', quotesRoute);
+app.post('/game/result', (request, response) => {
+    console.log(`request looks like this: ${JSON.stringify(request.body)}`);
+    return response.status(200).json({ message: "successfully got request" });
+})
 
 mongoose
     .connect(mongoDBURL)
