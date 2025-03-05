@@ -282,7 +282,7 @@ router.get('/session', async (request, response) => {
             httpOnly: false,
             secure: true, // Ensure this is true if using HTTPS
             sameSite: 'None',
-            domain: '.jules.tf'
+            domain: 'bestquotes.jules.tf'
         }); // Set the cookie with the token
         response.status(200).json({ token });
     }
